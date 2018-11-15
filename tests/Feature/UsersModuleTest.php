@@ -41,12 +41,12 @@ class UsersModuleTest extends TestCase
     function it_displays_the_users_details()
     {
         $user = factory(User::class)->create([
-            'name' => 'Duilio Palacios'
+            'name' => 'Felipe Guzman'
         ]);
 
         $this->get("/usuarios/{$user->id}") // usuarios/5
             ->assertStatus(200)
-            ->assertSee('Duilio Palacios');
+            ->assertSee('Felipe Guzman');
     }
 
     /** @test */
@@ -71,15 +71,22 @@ class UsersModuleTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->post('/usuarios/', [
-            'name' => 'Duilio',
-            'email' => 'duilio@styde.net',
-            'password' => '123456'
+            'name' => 'Felipe',
+            'email' => 'felipe@developers.net',
+            'password' => '123456',
+            'bio'   => 'Programdor vuejs y laravel',
+            'twitter' => 'https://twitte.com/gelipegc'
         ])->assertRedirect('usuarios');
 
         $this->assertCredentials([
-            'name' => 'Duilio',
-            'email' => 'duilio@styde.net',
+            'name' => 'Felipe',
+            'email' => 'felipe@developers.net',
             'password' => '123456',
+        ]);
+
+        $this->assertDatabaseHas('user_profiles',[
+            'bio'   => 'Programdor vuejs y laravel',
+            'twitter' => 'https://twitte.com/gelipegc'
         ]);
     }
 
@@ -89,7 +96,7 @@ class UsersModuleTest extends TestCase
         $this->from('/usuarios/nuevo')
             ->post('/usuarios/', [
                 'name' => '',
-                'email' => 'duilio@styde.net',
+                'email' => 'felipe@developers.net',
                 'password' => '123456'
             ])
             ->assertRedirect('usuarios/nuevo')
@@ -103,7 +110,7 @@ class UsersModuleTest extends TestCase
     {
         $this->from('usuarios/nuevo')
             ->post('/usuarios/', [
-                'name' => 'Duilio',
+                'name' => 'Felipe',
                 'email' => '',
                 'password' => '123456'
             ])
@@ -118,7 +125,7 @@ class UsersModuleTest extends TestCase
     {
         $this->from('usuarios/nuevo')
             ->post('/usuarios/', [
-                'name' => 'Duilio',
+                'name' => 'Felipe',
                 'email' => 'correo-no-valido',
                 'password' => '123456'
             ])
@@ -132,13 +139,13 @@ class UsersModuleTest extends TestCase
     function the_email_must_be_unique()
     {
         factory(User::class)->create([
-            'email' => 'duilio@styde.net'
+            'email' => 'felipe@developers.net'
         ]);
 
         $this->from('usuarios/nuevo')
             ->post('/usuarios/', [
-                'name' => 'Duilio',
-                'email' => 'duilio@styde.net',
+                'name' => 'Felipe',
+                'email' => 'felipe@developers.net',
                 'password' => '123456'
             ])
             ->assertRedirect('usuarios/nuevo')
@@ -152,8 +159,8 @@ class UsersModuleTest extends TestCase
     {
         $this->from('usuarios/nuevo')
             ->post('/usuarios/', [
-                'name' => 'Duilio',
-                'email' => 'duilio@styde.net',
+                'name' => 'Felipe',
+                'email' => 'felipe@developers.net',
                 'password' => ''
             ])
             ->assertRedirect('usuarios/nuevo')
@@ -186,14 +193,14 @@ class UsersModuleTest extends TestCase
         $this->withoutExceptionHandling();
 
         $this->put("/usuarios/{$user->id}", [
-            'name' => 'Duilio',
-            'email' => 'duilio@styde.net',
+            'name' => 'Felipe',
+            'email' => 'felipe@developers.net',
             'password' => '123456'
         ])->assertRedirect("/usuarios/{$user->id}");
 
         $this->assertCredentials([
-            'name' => 'Duilio',
-            'email' => 'duilio@styde.net',
+            'name' => 'Felipe',
+            'email' => 'felipe@developers.net',
             'password' => '123456',
         ]);
     }
@@ -206,13 +213,13 @@ class UsersModuleTest extends TestCase
         $this->from("usuarios/{$user->id}/editar")
             ->put("usuarios/{$user->id}", [
                 'name' => '',
-                'email' => 'duilio@styde.net',
+                'email' => 'felipe@developers.net',
                 'password' => '123456'
             ])
             ->assertRedirect("usuarios/{$user->id}/editar")
             ->assertSessionHasErrors(['name']);
 
-        $this->assertDatabaseMissing('users', ['email' => 'duilio@styde.net']);
+        $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
     }
 
     /** @test */
@@ -222,14 +229,14 @@ class UsersModuleTest extends TestCase
 
         $this->from("usuarios/{$user->id}/editar")
             ->put("usuarios/{$user->id}", [
-                'name' => 'Duilio Palacios',
+                'name' => 'Felipe Palacios',
                 'email' => 'correo-no-valido',
                 'password' => '123456'
             ])
             ->assertRedirect("usuarios/{$user->id}/editar")
             ->assertSessionHasErrors(['email']);
 
-        $this->assertDatabaseMissing('users', ['name' => 'Duilio Palacios']);
+        $this->assertDatabaseMissing('users', ['name' => 'Felipe Palacios']);
     }
 
     /** @test */
@@ -242,12 +249,12 @@ class UsersModuleTest extends TestCase
         ]);
 
         $user = factory(User::class)->create([
-            'email' => 'duilio@styde.net'
+            'email' => 'felipe@developers.net'
         ]);
 
         $this->from("usuarios/{$user->id}/editar")
             ->put("usuarios/{$user->id}", [
-                'name' => 'Duilio',
+                'name' => 'Felipe',
                 'email' => 'existing-email@example.com',
                 'password' => '123456'
             ])
@@ -261,20 +268,20 @@ class UsersModuleTest extends TestCase
     function the_users_email_can_stay_the_same_when_updating_the_user()
     {
         $user = factory(User::class)->create([
-            'email' => 'duilio@styde.net'
+            'email' => 'felipe@developers.net'
         ]);
 
         $this->from("usuarios/{$user->id}/editar")
             ->put("usuarios/{$user->id}", [
-                'name' => 'Duilio Palacios',
-                'email' => 'duilio@styde.net',
+                'name' => 'Felipe Palacios',
+                'email' => 'felipe@developers.net',
                 'password' => '12345678'
             ])
             ->assertRedirect("usuarios/{$user->id}"); // (users.show)
 
         $this->assertDatabaseHas('users', [
-            'name' => 'Duilio Palacios',
-            'email' => 'duilio@styde.net',
+            'name' => 'Felipe Palacios',
+            'email' => 'felipe@developers.net',
         ]);
     }
 
@@ -289,15 +296,15 @@ class UsersModuleTest extends TestCase
 
         $this->from("usuarios/{$user->id}/editar")
             ->put("usuarios/{$user->id}", [
-                'name' => 'Duilio',
-                'email' => 'duilio@styde.net',
+                'name' => 'Felipe',
+                'email' => 'felipe@developers.net',
                 'password' => ''
             ])
             ->assertRedirect("usuarios/{$user->id}"); // (users.show)
 
         $this->assertCredentials([
-            'name' => 'Duilio',
-            'email' => 'duilio@styde.net',
+            'name' => 'Felipe',
+            'email' => 'felipe@developers.net',
             'password' => $oldPassword // VERY IMPORTANT!
         ]);
     }

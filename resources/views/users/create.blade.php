@@ -32,9 +32,20 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Contraseña:</label>
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Mayor a 6 caracteres">
+                    <label for="password">Bio:</label>
+                        <textarea name="bio" id="bio" cols="30" rows="10"></textarea>                
                 </div>
+
+                <div class="form-group">
+                    <label for="name">Nombre:</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Pedro Perez" value="{{ old('name') }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="name">Nombre:</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Pedro Perez" value="{{ old('name') }}">
+                </div>
+
 
                 <button type="submit" class="btn btn-primary">Crear usuario</button>
                 <a href="{{ route('users.index') }}" class="btn btn-link">Regresar al listado de usuarios</a>

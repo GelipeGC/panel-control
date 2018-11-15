@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\{User,UserProfile};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -39,6 +39,8 @@ class UserController extends Controller
             'name' => 'required',
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => 'required',
+            'bio'   =>'required',
+            'twitter' =>'url'
         ], [
             'name.required' => 'El campo nombre es obligatorio'
         ]);
@@ -48,6 +50,11 @@ class UserController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password'])
         ]);
+
+        UserProfile::create([
+            'bio'   => $data['bio'],
+            'twitter' => $data['twitter']
+        ]); 
 
         return redirect()->route('users.index');
     }
