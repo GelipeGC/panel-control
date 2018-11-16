@@ -8,7 +8,7 @@ services:
 
 before_script:
   - cp .env.travis .env
-  - mysql -e 'create database curso_styde;'
+  - mysql -e 'create database curso_styde_tests;'
   - composer self-update
   - composer install --no-interaction
   - php artisan key:generate
