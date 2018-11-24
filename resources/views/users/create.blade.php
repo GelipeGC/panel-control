@@ -32,18 +32,18 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="password">Bio:</label>
-                        <textarea name="bio" id="bio" cols="30" rows="10"></textarea>                
+                    <label for="password">Contraseña</label>
+                    <input id="password" type="password" name="password" placeholder="Mayor a 6 caracteres">
                 </div>
 
                 <div class="form-group">
-                    <label for="name">Nombre:</label>
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Pedro Perez" value="{{ old('name') }}">
+                    <label for="bio">Bio:</label>
+                    <textarea type="text" class="form-control" name="bio" id="bio" value="{{ old('bio') }}"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label for="name">Nombre:</label>
-                    <input type="text" class="form-control" name="name" id="name" placeholder="Pedro Perez" value="{{ old('name') }}">
+                    <label for="twitter">Twitter:</label>
+                    <input type="text" class="form-control" name="twitter" id="twitter" placeholder="twitter" value="{{ old('twitter') }}">
                 </div>
 
 

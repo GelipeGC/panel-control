@@ -86,7 +86,28 @@ class UsersModuleTest extends TestCase
 
         $this->assertDatabaseHas('user_profiles',[
             'bio'   => 'Programdor vuejs y laravel',
-            'twitter' => 'https://twitte.com/gelipegc'
+            'twitter' => 'https://twitte.com/gelipegc',
+            'user_id' => User::findByEmail('felipe@developers.net')->id
+        ]);
+    }
+
+    /** @test */
+    function the_twitter_field_is_optional()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->post('/usuarios/',$this->getValidData())->assertRedirect('usuarios');
+
+        $this->assertCredentials([
+            'name' => 'Felipe',
+            'email' => 'felipe@developers.net',
+            'password' => '123456',
+        ]);
+
+        $this->assertDatabaseHas('user_profiles',[
+            'bio'   => 'Programdor vuejs y laravel',
+            'twitter' => null,
+            'user_id' => User::findByEmail('felipe@developers.net')->id
         ]);
     }
 
@@ -94,46 +115,40 @@ class UsersModuleTest extends TestCase
     function the_name_is_required()
     {
         $this->from('/usuarios/nuevo')
-            ->post('/usuarios/', [
-                'name' => '',
-                'email' => 'felipe@developers.net',
-                'password' => '123456'
-            ])
+            ->post('/usuarios/', $this->getValidData([
+                'name' => ''
+            ]))
             ->assertRedirect('usuarios/nuevo')
             ->assertSessionHasErrors(['name' => 'El campo nombre es obligatorio']);
 
-        $this->assertEquals(0, User::count());
+        $this->assertDatabaseEmpty('users');
     }
 
     /** @test */
     function the_email_is_required()
     {
         $this->from('usuarios/nuevo')
-            ->post('/usuarios/', [
-                'name' => 'Felipe',
-                'email' => '',
-                'password' => '123456'
-            ])
+            ->post('/usuarios/', $this->getValidData([
+                'email' => ''
+            ]))
             ->assertRedirect('usuarios/nuevo')
             ->assertSessionHasErrors(['email']);
 
-        $this->assertEquals(0, User::count());
-    }
+            $this->assertDatabaseEmpty('users');
+        }
 
     /** @test */
     function the_email_must_be_valid()
     {
         $this->from('usuarios/nuevo')
-            ->post('/usuarios/', [
-                'name' => 'Felipe',
+            ->post('/usuarios/', $this->getValidData([
                 'email' => 'correo-no-valido',
-                'password' => '123456'
-            ])
+            ]))
             ->assertRedirect('usuarios/nuevo')
             ->assertSessionHasErrors(['email']);
 
-        $this->assertEquals(0, User::count());
-    }
+            $this->assertDatabaseEmpty('users');
+        }
 
     /** @test */
     function the_email_must_be_unique()
@@ -143,11 +158,9 @@ class UsersModuleTest extends TestCase
         ]);
 
         $this->from('usuarios/nuevo')
-            ->post('/usuarios/', [
-                'name' => 'Felipe',
-                'email' => 'felipe@developers.net',
-                'password' => '123456'
-            ])
+            ->post('/usuarios/', $this->getValidData([
+                'email' => 'felipe@developers.net'
+            ]))
             ->assertRedirect('usuarios/nuevo')
             ->assertSessionHasErrors(['email']);
 
@@ -158,16 +171,14 @@ class UsersModuleTest extends TestCase
     function the_password_is_required()
     {
         $this->from('usuarios/nuevo')
-            ->post('/usuarios/', [
-                'name' => 'Felipe',
-                'email' => 'felipe@developers.net',
+            ->post('/usuarios/', $this->getValidData([
                 'password' => ''
-            ])
+            ]))
             ->assertRedirect('usuarios/nuevo')
             ->assertSessionHasErrors(['password']);
 
-        $this->assertEquals(0, User::count());
-    }
+            $this->assertDatabaseEmpty('users');
+        }
 
     /** @test */
     function it_loads_the_edit_user_page()
@@ -325,6 +336,17 @@ class UsersModuleTest extends TestCase
 
         // Or:
         //$this->assertSame(0, User::count());
+    }
+
+    protected function getValidData(array $custom = [])
+    {
+        return array_filter(array_merge([
+                'name' => 'Felipe',
+                'email' => 'felipe@developers.net',
+                'password' => '123456',
+                'bio'   => 'Programdor vuejs y laravel',
+                'twitter' => null
+            ], $custom));
     }
 }
 
