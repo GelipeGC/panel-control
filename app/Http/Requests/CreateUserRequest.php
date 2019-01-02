@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\User;
+use App\{Role,User};
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -30,7 +31,16 @@ class CreateUserRequest extends FormRequest
             'email' => ['required', 'email', 'unique:users,email'],
             'password' => 'required',
             'bio'   =>'required',
-            'twitter' => ['nullable','url']
+            'twitter' => ['nullable','url'],
+            'role' => ['nullable', Rule::in(Role::getList())],
+            'profession_id' => [
+                'nullable', 'present',
+                Rule::exists('professions', 'id')->whereNull('deleted_at')
+            ],
+            'skills' => [
+                'array',
+                Rule::exists('skills', 'id'),
+            ]
         ];
     }
 
@@ -46,16 +56,21 @@ class CreateUserRequest extends FormRequest
         DB::transaction(function () {
             $data = $this->validated();
 
-            $user = User::create([
+            $user = new User([
                 'name' => $data['name'],
                 'email' => $data['email'],
-                'password' => bcrypt($data['password'])
+                'password' => bcrypt($data['password']),
             ]);
-    
+            $user->role = $data['role'] ?? 'user';
+            $user->save();
+
             $user->profile()->create([
                 'bio'   => $data['bio'],
-                'twitter' => array_get($data, 'twitter')
+                'twitter' => $data['twitter'] ?? null,
+                'profession_id' => $data['profession_id'],
             ]);
+
+            $user->skills()->attach($data['skills'] ?? []);
         });
     }
 }

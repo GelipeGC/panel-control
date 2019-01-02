@@ -3,13 +3,17 @@
 namespace Tests\Feature;
 
 use App\User;
-use Illuminate\Support\Facades\DB;
+use App\Skill;
+use App\Profession;
 use Tests\TestCase;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class UsersModuleTest extends TestCase
 {
     use RefreshDatabase;
+
+    protected $profession;
 
     /** @test */
     function it_shows_the_users_list()
@@ -60,9 +64,20 @@ class UsersModuleTest extends TestCase
     /** @test */
     function it_loads_the_new_users_page()
     {
+        $profession = factory(Profession::class)->create();
+
+        $skillA = factory(Skill::class)->create();
+        $skillB = factory(Skill::class)->create();
+
         $this->get('/usuarios/nuevo')
             ->assertStatus(200)
-            ->assertSee('Crear usuario');
+            ->assertSee('Crear usuario')
+            ->assertViewHas('professions', function ($professions) use($profession)  {
+                return $professions->contains($profession);
+            })
+            ->assertViewHas('skills', function($skills) use($skillA, $skillB) {
+                return $skills->contains($skillA) && $skills->contains($skillB);
+            });
     }
 
     /** @test */
@@ -70,33 +85,57 @@ class UsersModuleTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $this->post('/usuarios/', [
-            'name' => 'Felipe',
-            'email' => 'felipe@developers.net',
-            'password' => '123456',
-            'bio'   => 'Programdor vuejs y laravel',
-            'twitter' => 'https://twitte.com/gelipegc'
-        ])->assertRedirect('usuarios');
+        $skillA = factory(Skill::class)->create();
+        $skillB = factory(Skill::class)->create();
+        $skillC = factory(Skill::class)->create();
+
+        $this->post('/usuarios/', $this->getValidData([
+            'skills' => [$skillA->id,$skillB->id]
+        ]))->assertRedirect('usuarios');
 
         $this->assertCredentials([
             'name' => 'Felipe',
             'email' => 'felipe@developers.net',
             'password' => '123456',
+            'role'  => 'user'
         ]);
+
+        $user = User::findByEmail('felipe@developers.net');
 
         $this->assertDatabaseHas('user_profiles',[
             'bio'   => 'Programdor vuejs y laravel',
             'twitter' => 'https://twitte.com/gelipegc',
-            'user_id' => User::findByEmail('felipe@developers.net')->id
+            'user_id' => $user->id,
+            'profession_id' => $this->profession->id,
+
         ]);
+
+        $this->assertDatabaseHas('user_skill', [
+            'user_id' => $user->id,
+            'skill_id' => $skillA->id
+        ]);
+
+        $this->assertDatabaseHas('user_skill', [
+            'user_id' => $user->id,
+            'skill_id' => $skillB->id
+        ]);
+
+        $this->assertDatabaseMissing('user_skill', [
+            'user_id' => $user->id,
+            'skill_id' => $skillC->id
+        ]);
+
     }
 
+    
     /** @test */
     function the_twitter_field_is_optional()
     {
         $this->withoutExceptionHandling();
 
-        $this->post('/usuarios/',$this->getValidData())->assertRedirect('usuarios');
+        $this->post('/usuarios/',$this->getValidData([
+            'twitter' => null
+        ]))->assertRedirect('usuarios');
 
         $this->assertCredentials([
             'name' => 'Felipe',
@@ -108,6 +147,55 @@ class UsersModuleTest extends TestCase
             'bio'   => 'Programdor vuejs y laravel',
             'twitter' => null,
             'user_id' => User::findByEmail('felipe@developers.net')->id
+        ]);
+    }
+
+    /** @test */
+    function the_role_field_is_optional()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->post('/usuarios/',$this->getValidData([
+            'role' => null
+        ]))->assertRedirect('usuarios');
+
+        $this->assertDatabaseHas('users',[
+            'email' => 'felipe@developers.net',
+            'role' => 'user',
+        ]);
+
+    }
+    /** @test */
+    function the_role_must_be_valid()
+    {
+
+        $this->post('/usuarios/',$this->getValidData([
+            'role' => 'invalid-role',
+        ]))->assertSessionHasErrors('role');
+
+        $this->assertDatabaseEmpty('users');
+
+    }
+
+    /** @test */
+    function the_profession_id_field_is_optional()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->post('/usuarios/', $this->getValidData([
+            'profession_id' => '',
+        ]))->assertRedirect('usuarios');
+
+        $this->assertCredentials([
+            'name' => 'Felipe',
+            'email' => 'felipe@developers.net',
+            'password' => '123456',
+        ]);
+        
+        $this->assertDatabaseHas('user_profiles', [
+            'bio' => 'Programdor vuejs y laravel',
+            'user_id' => User::findByEmail('felipe@developers.net')->id,
+            'profession_id' => null,
         ]);
     }
 
@@ -178,7 +266,54 @@ class UsersModuleTest extends TestCase
             ->assertSessionHasErrors(['password']);
 
             $this->assertDatabaseEmpty('users');
-        }
+    }
+
+    /** @test */
+    function the_profession_must_be_valid()
+    {
+        $this->handleValidationExceptions();
+
+        $this->from('/usuarios/nuevo')
+            ->post('/usuarios/', $this->getValidData([
+                'profession_id' => '999'
+            ]))
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['profession_id']);
+
+        $this->assertDatabaseEmpty('users');
+    }
+    /** @test */
+    function the_skills_must_be_can_an_array()
+    {
+        $this->handleValidationExceptions();
+        
+        $this->from('/usuarios/nuevo')
+            ->post('/usuarios/', $this->getValidData([
+                'skills' => 'PHP, JS'
+            ]))
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['skills']);
+
+        $this->assertDatabaseEmpty('users');
+    }
+
+    /** @test */
+    function the_skills_must_be_valid()
+    {
+        $this->handleValidationExceptions();
+        
+        $skillA = factory(Skill::class)->create();
+        $skillB = factory(Skill::class)->create();
+
+        $this->from('/usuarios/nuevo')
+            ->post('/usuarios/', $this->getValidData([
+                'skills' => [$skillA->id, $skillB->id + 1]
+            ]))
+            ->assertRedirect('usuarios/nuevo')
+            ->assertSessionHasErrors(['skills']);
+
+        $this->assertDatabaseEmpty('users');
+    }
 
     /** @test */
     function it_loads_the_edit_user_page()
@@ -340,13 +475,16 @@ class UsersModuleTest extends TestCase
 
     protected function getValidData(array $custom = [])
     {
-        return array_filter(array_merge([
+        $this->profession = factory(Profession::class)->create();
+        return array_merge([
                 'name' => 'Felipe',
                 'email' => 'felipe@developers.net',
                 'password' => '123456',
+                'profession_id' => $this->profession->id,
                 'bio'   => 'Programdor vuejs y laravel',
-                'twitter' => null
-            ], $custom));
+                'twitter' => 'https://twitte.com/gelipegc',
+                'role' => 'user',
+            ], $custom);
     }
 }
 
