@@ -3,8 +3,16 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserProfile extends Model
 {
-    protected $fillable = ['bio','twitter','profession_id'];
+    use SoftDeletes;
+
+    protected $guarded = [];
+
+    public function profession()
+    {
+        return $this->belongsTo(Profession::class)->withDefault();
+    }
 }

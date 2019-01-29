@@ -19,6 +19,22 @@ Route::get('/usuarios/{user}/editar', 'UserController@edit')->name('users.edit')
 
 Route::put('/usuarios/{user}', 'UserController@update');
 
+Route::get('/usuarios/papelera', 'UserController@trashed')->name('users.trashed');
+
 Route::get('/saludo/{name}/{nickname?}', 'WelcomeUserController');
 
-Route::delete('/usuarios/{user}', 'UserController@destroy')->name('users.destroy');
+Route::patch('/usuarios/{user}/papelera', 'UserController@trash')->name('users.trash');
+
+Route::delete('/usuarios/{id}', 'UserController@destroy')->name('users.destroy');
+
+//profile
+Route::get('/editar-perfil/', 'ProfileController@edit');
+Route::put('/editar-perfil/', 'ProfileController@update');
+
+//professions
+Route::get('/profesiones/', 'ProfessionController@index');
+Route::delete('/profesiones/{profession}', 'ProfessionController@destroy');
+
+//Skills
+Route::get('/habilidades/', 'SkillController@index');
+Route::delete('/habilidades/{skill}', 'SkillController@destroy');

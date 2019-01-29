@@ -2,21 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Skill;
-use App\Profession;
-use App\{User,UserProfile};
+use App\{Profession, Skill, User};
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\{CreateUserRequest, UpdateUserRequest};
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::all();
+        $users = User::query()
+                    
+                    ->search(request('search'))
+                    ->orderBy('created_at','DESC')
+                    ->paginate(15);
 
         $title = 'Listado de usuarios';
+
+        return view('users.index', compact('title', 'users'));
+    }
+
+    public function trashed()
+    {
+        $users = User::onlyTrashed()->orderBy('created_at','DESC')->paginate(15);
+
+        $title = 'Listado de usuarios en papelera';
 
         return view('users.index', compact('title', 'users'));
     }
@@ -45,29 +56,31 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(User $user)
+    public function update(UpdateUserRequest $request,User $user)
     {
-        $data = request()->validate([
-            'name' => 'required',
-            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
-            'password' => '',
-        ]);
-
-        if ($data['password'] != null) {
-            $data['password'] = bcrypt($data['password']);
-        } else {
-            unset($data['password']);
-        }
-
-        $user->update($data);
+        $request->updateUser($user);
 
         return redirect()->route('users.show', ['user' => $user]);
     }
 
-    function destroy(User $user)
+   
+
+    public function trash(User $user)
     {
         $user->delete();
 
+        $user->profile()->delete();
+
         return redirect()->route('users.index');
+    }
+
+    public function destroy($id)
+    {
+        $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
+        
+        
+        $user = $user->forceDelete();
+
+        return redirect()->route('users.trashed');
     }
 }

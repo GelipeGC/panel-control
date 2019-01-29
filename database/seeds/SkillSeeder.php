@@ -16,5 +16,7 @@ class SkillSeeder extends Seeder
         factory(\App\Skill::class)->create(['name' => 'PHP']);
         factory(\App\Skill::class)->create(['name' => 'JavaScript']);
         factory(\App\Skill::class)->create(['name' => 'TDD']);
+        factory(\App\Skill::class)->create(['name' => 'Vuejs']);
+        factory(\App\Skill::class)->create(['name' => 'React']);
     }
 }
