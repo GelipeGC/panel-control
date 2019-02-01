@@ -13,6 +13,8 @@ class UserProfile extends Model
 
     public function profession()
     {
-        return $this->belongsTo(Profession::class)->withDefault();
+        return $this->belongsTo(Profession::class)->withDefault([
+            'title' => '(Sin profesión)'
+        ]);
     }
 }

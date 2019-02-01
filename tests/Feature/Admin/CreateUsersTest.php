@@ -13,7 +13,8 @@ class CreateUsersTest extends TestCase
     use RefreshDatabase;
 
     protected $defaultData = [
-        'name' => 'Felipe',
+        'first_name' => 'Felipe',
+        'last_name' => 'Guzman',
         'email' => 'felipe@developers.net',
         'password' => '123456',
         'profession_id' => null,
@@ -50,7 +51,8 @@ class CreateUsersTest extends TestCase
         ]))->assertRedirect('usuarios');
 
         $this->assertCredentials([
-            'name' => 'Felipe',
+            'first_name' => 'Felipe',
+            'last_name' => 'Guzman',
             'email' => 'felipe@developers.net',
             'password' => '123456',
             'role'  => 'user'
@@ -93,7 +95,8 @@ class CreateUsersTest extends TestCase
         ]))->assertRedirect('usuarios');
 
         $this->assertCredentials([
-            'name' => 'Felipe',
+            'first_name' => 'Felipe',
+            'last_name' => 'Guzman',
             'email' => 'felipe@developers.net',
             'password' => '123456',
         ]);
@@ -142,7 +145,8 @@ class CreateUsersTest extends TestCase
         ]))->assertRedirect('usuarios');
 
         $this->assertCredentials([
-            'name' => 'Felipe',
+            'first_name' => 'Felipe',
+            'last_name' => 'Guzman',
             'email' => 'felipe@developers.net',
             'password' => '123456',
         ]);
@@ -171,9 +175,22 @@ class CreateUsersTest extends TestCase
         $this->handleValidationExceptions();
 
         $this->post('/usuarios/', $this->withData([
-                'name' => ''
+                'first_name' => ''
             ]))
-            ->assertSessionHasErrors(['name' => 'El campo nombre es obligatorio']);
+            ->assertSessionHasErrors(['first_name']);
+
+        $this->assertDatabaseEmpty('users');
+    }
+
+    /** @test */
+    function the_last_name_is_required()
+    {
+        $this->handleValidationExceptions();
+
+        $this->post('/usuarios/', $this->withData([
+                'last_name' => ''
+            ]))
+            ->assertSessionHasErrors(['last_name']);
 
         $this->assertDatabaseEmpty('users');
     }

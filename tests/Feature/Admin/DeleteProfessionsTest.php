@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\User;
 use App\Profession;
 use Tests\TestCase;
 use App\UserProfile;
@@ -32,7 +33,8 @@ class DeleteProfessionsTest extends TestCase
         $profession = factory(Profession::class)->create();
 
         $profile = factory(UserProfile::class)->create([
-            'profession_id' => $profession->id
+            'profession_id' => $profession->id,
+            'user_id' => factory(User::class)->create()->id
         ]);
 
         $response = $this->delete("profesiones/{$profession->id}");

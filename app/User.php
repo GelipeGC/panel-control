@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Laravel\Scout\Searchable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -10,9 +11,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     //protected $table = 'users';
-    use SoftDeletes;
+    use Notifiable, SoftDeletes, Searchable;
 
-    use Notifiable;
 
    protected $guarded = [];
 
@@ -55,15 +55,19 @@ class User extends Authenticatable
 
     public function scopeSearch($query, $search)
     {
-        if (empty($search)) {
+        if (empty ($search)) {
             return;
         }
-
-        $query->where('name','like', "%{$search}%")
+        $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$search}%")
             ->orWhere('email', 'like', "%{$search}%")
-            ->orWhereHas('team', function ($query) use ($search){
-                $query->where('name','like', "%{$search}%");
+            ->orWhereHas('team', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
             });
+    }
+
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 }
 

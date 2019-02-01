@@ -9,7 +9,7 @@
             <a href="{{ route('users.create') }}" class="btn btn-dark">Nuevo usuario</a>
         </p>
     </div>
-    @include('users._filters')
+    @includeWhen(isset($states),'users._filters')
 
     @if ($users->isNotEmpty())
 

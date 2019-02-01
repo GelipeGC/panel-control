@@ -18,8 +18,8 @@ class UserController extends Controller
                     ->orderBy('created_at','DESC')
                     ->paginate(15);
 
-        $title = 'Listado de usuarios';
 
+        $title = 'Listado de usuarios';
         return view('users.index', compact('title', 'users'));
     }
 
