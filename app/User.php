@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Laravel\Scout\Searchable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -11,7 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class User extends Authenticatable
 {
     //protected $table = 'users';
-    use Notifiable, SoftDeletes, Searchable;
+    use Notifiable, SoftDeletes;
 
 
    protected $guarded = [];
