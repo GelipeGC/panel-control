@@ -13,14 +13,14 @@ class CreateUsersTest extends TestCase
     use RefreshDatabase;
 
     protected $defaultData = [
-        'first_name' => 'Felipe',
-        'last_name' => 'Guzman',
+        'name' => 'Felipe',
         'email' => 'felipe@developers.net',
         'password' => '123456',
         'profession_id' => null,
         'bio'   => 'Programdor vuejs y laravel',
         'twitter' => 'https://twitte.com/gelipegc',
         'role' => 'user',
+        'state' => 'active'
     ];
     /** @test */
     function it_loads_the_new_users_page()
@@ -51,11 +51,11 @@ class CreateUsersTest extends TestCase
         ]))->assertRedirect('usuarios');
 
         $this->assertCredentials([
-            'first_name' => 'Felipe',
-            'last_name' => 'Guzman',
+            'name' => 'Felipe',
             'email' => 'felipe@developers.net',
             'password' => '123456',
-            'role'  => 'user'
+            'role'  => 'user',
+            'active' => true
         ]);
 
         $user = User::findByEmail('felipe@developers.net');
@@ -95,8 +95,7 @@ class CreateUsersTest extends TestCase
         ]))->assertRedirect('usuarios');
 
         $this->assertCredentials([
-            'first_name' => 'Felipe',
-            'last_name' => 'Guzman',
+            'name' => 'Felipe',
             'email' => 'felipe@developers.net',
             'password' => '123456',
         ]);
@@ -145,8 +144,8 @@ class CreateUsersTest extends TestCase
         ]))->assertRedirect('usuarios');
 
         $this->assertCredentials([
-            'first_name' => 'Felipe',
-            'last_name' => 'Guzman',
+            'name' => 'Felipe',
+            
             'email' => 'felipe@developers.net',
             'password' => '123456',
         ]);
@@ -175,22 +174,9 @@ class CreateUsersTest extends TestCase
         $this->handleValidationExceptions();
 
         $this->post('/usuarios/', $this->withData([
-                'first_name' => ''
+                'name' => ''
             ]))
-            ->assertSessionHasErrors(['first_name']);
-
-        $this->assertDatabaseEmpty('users');
-    }
-
-    /** @test */
-    function the_last_name_is_required()
-    {
-        $this->handleValidationExceptions();
-
-        $this->post('/usuarios/', $this->withData([
-                'last_name' => ''
-            ]))
-            ->assertSessionHasErrors(['last_name']);
+            ->assertSessionHasErrors(['name']);
 
         $this->assertDatabaseEmpty('users');
     }
@@ -293,5 +279,31 @@ class CreateUsersTest extends TestCase
     }
 
     
+    /** @test */
+    function the_state_is_required()
+    {
+        $this->handleValidationExceptions();
 
+        $this->post('/usuarios/',$this->withData([
+            'state' => null
+        ]))->assertSessionHasErrors('state');
+
+        $this->assertDatabaseEmpty('users');
+
+    }
+
+    /** @test */
+    function the_state_must_be_valid()
+    {
+        
+        $this->handleValidationExceptions();
+
+        $this->post('/usuarios/',$this->withData([
+            'state' => 'invalid-state',
+        ]))->assertSessionHasErrors('state');
+
+        $this->assertDatabaseEmpty('users');
+
+
+    }
 }

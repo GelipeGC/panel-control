@@ -25,8 +25,7 @@ class ProfileController extends Controller
         $user = User::first();
 
         $user->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'name' => $request->name,
             'email' => $request->email,
         ]);
 

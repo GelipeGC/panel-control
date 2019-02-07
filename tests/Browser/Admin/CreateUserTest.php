@@ -16,10 +16,10 @@ class CreateUserTest extends DuskTestCase
         $profession =  factory(Profession::class)->create();
         $skillA = factory(Skill::class)->create();
         $skillB = factory(Skill::class)->create();
+
         $this->browse(function (Browser $browser) use($profession, $skillA, $skillB) {
-            $browser->visit('/usuarios/nuevo')
-                    ->type('first_name', 'Felipe')
-                    ->type('last_name', 'Guzman')
+            $browser->visit('usuarios/nuevo')
+                    ->type('name', 'Felipe Guzman')
                     ->type('email','felipe@developers.net')
                     ->type('password','secret')
                     ->type('bio', 'Programador')
@@ -28,6 +28,7 @@ class CreateUserTest extends DuskTestCase
                     ->check("skills[{$skillA->id}]")
                     ->check("skills[{$skillB->id}]")
                     ->radio('role', 'user')
+                    ->radio('state', 'active')
                     ->press('Crear usuario')
                     ->assertPathIs('/usuarios')
                     ->assertSee('Felipe')
@@ -35,11 +36,11 @@ class CreateUserTest extends DuskTestCase
         });
 
         $this->assertCredentials([
-            'first_name' => 'Felipe',
-            'last_name' => 'Guzman',
+            'name' => 'Felipe Guzman',
             'email' => 'felipe@developers.net',
             'password' => 'secret',
-            'role'  => 'user'
+            'role'  => 'user',
+            'active' => true
         ]);
 
         $user = User::findByEmail('felipe@developers.net');

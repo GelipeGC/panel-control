@@ -13,23 +13,31 @@ class UserController extends Controller
     public function index()
     {
         $users = User::query()
-                    
-                    ->search(request('search'))
-                    ->orderBy('created_at','DESC')
-                    ->paginate(15);
-
-
-        $title = 'Listado de usuarios';
-        return view('users.index', compact('title', 'users'));
+            ->with('team', 'skills', 'profile.profession')
+            ->search(request('search'))
+            ->byState(request('state'))
+            ->byRole(request('role'))
+            ->orderByDesc('created_at')
+            ->paginate();
+        $users->appends(request(['search']));
+        return view('users.index', [
+            'users' => $users,
+            'view' => 'index',
+            'showFilters' => true,
+            'skills' => Skill::orderBy('name')->get(),
+            'checkedSkills' => collect(request('skills')),
+        ]);
     }
 
     public function trashed()
     {
         $users = User::onlyTrashed()->orderBy('created_at','DESC')->paginate(15);
 
-        $title = 'Listado de usuarios en papelera';
 
-        return view('users.index', compact('title', 'users'));
+        return view('users.index', [
+            'users' => $users,
+            'view' => 'trash'
+        ]);
     }
 
     public function show(User $user)

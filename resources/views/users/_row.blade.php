@@ -1,14 +1,19 @@
 <tr>
     <td rowspan="2">{{ $user->id }}</td>
     <th scope="row">
-        {{ $user->name }}
+        {{ $user->name }} {{ $user->status }} 
+        @if ($user->role != 'user')
+            ({{ $user->role}})
+            
+        @endif
+        <span class="status st-{{ $user->state }}"></span> 
+       
+        <span class="note">{{ $user->team->name }}</span>
     </th>
-    <td>{{ $user->team->name}}</td>
     <td>{{ $user->email }}</td>
-    <td>{{ $user->role }}</td>
     <td>
         <span class="note">Registro: {{ $user->created_at->format('d/m/Y') }}</span>
-        <span class="note">Último login: {{ $user->created_at->format('d/m/Y') }}</span>
+        <span class="note">Último login: -</span>
     </td>
     <td class="text-right">
         @if ($user->trashed())

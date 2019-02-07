@@ -47,11 +47,11 @@ class UserSeeder extends Seeder
     {
         $admin = factory(User::class)->create([
             'team_id' => $this->teams->firstWhere('name', 'Styde'),
-            'first_name' => 'Felipe ',
-            'last_name' => 'Guzman',
+            'name' => 'Felipe Guzman',
             'email' => 'felipe@test.com',
             'password' => bcrypt('laravel'),
             'role' => 'admin',
+            'active' => true
         ]);
 
         $admin->skills()->attach($this->skills);
@@ -66,6 +66,7 @@ class UserSeeder extends Seeder
     {
         $user = factory(User::class)->create([
             'team_id' => rand(0, 2) ? null : $this->teams->random()->id,
+            'active' => rand(0, 3) ? true : false,
         ]);
 
         $user->skills()->attach($this->skills->random(rand(0, 7)));

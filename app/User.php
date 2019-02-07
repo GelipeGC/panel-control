@@ -25,6 +25,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
+        'active' => 'bool'
     ];
 
     public static function findByEmail($email)
@@ -57,16 +58,43 @@ class User extends Authenticatable
         if (empty ($search)) {
             return;
         }
-        $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$search}%")
+        $query->where('name', 'like', "%{$search}%")
             ->orWhere('email', 'like', "%{$search}%")
             ->orWhereHas('team', function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             });
     }
 
-    public function getNameAttribute()
+    public function scopeByState($query, $state)
     {
-        return "{$this->first_name} {$this->last_name}";
+        if ($state == 'active') {
+            return $query->where('active', true);
+        }
+
+        if ($state == 'inactive') {
+            return $query->where('active', false);
+        }
     }
+
+    public function scopeByRole($query, $role)
+    {
+        if (in_array($role, ['admin','user'])) {
+            return $query->where('role', $role);
+        }
+        
+    }
+
+    public function setStateAttribute($value)
+    {
+        $this->attributes['active'] = $value == 'active';
+    }
+
+    public function getStateAttribute()
+    {
+        if ($this->active !== null) {
+            return $this->active ? 'active' : 'inactive';
+        }
+    }
+    
 }
 

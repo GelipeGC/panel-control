@@ -26,8 +26,7 @@ class UpdateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'first_name' => 'required',
-            'last_name' => 'required',
+            'name' => 'required',
             'email' => ['required', 'email', Rule::unique('users')->ignore($this->user)],
             'password' => '',
             'bio'   =>'required',
@@ -40,6 +39,9 @@ class UpdateUserRequest extends FormRequest
             'skills' => [
                 'array',
                 Rule::exists('skills', 'id'),
+            ],
+            'state' => [
+                Rule::in(['active', 'inactive'])
             ]
         ];
     }
@@ -47,9 +49,9 @@ class UpdateUserRequest extends FormRequest
     public function updateUser($user)
     {
         $user->fill([
-            'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email
+            'name' => $this->name,
+            'email' => $this->email,
+            'state' => $this->state
         ]);
 
         if ($this->password != null) {
