@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\UserFilter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -28,10 +29,12 @@ class User extends Authenticatable
         'active' => 'bool'
     ];
 
-    public static function findByEmail($email)
+    public function newEloquentBuilder($query)
     {
-        return static::where(compact('email'))->first();
+        return new UserQuery($query);
     }
+
+    
 
    public function team()
    {
@@ -52,38 +55,11 @@ class User extends Authenticatable
     {
         return $this->is_admin == 'admin';
     }
-
-    public function scopeSearch($query, $search)
+    public function scopeFilterBy($query,QueryFilter $filters, array $data)
     {
-        if (empty ($search)) {
-            return;
-        }
-        $query->where('name', 'like', "%{$search}%")
-            ->orWhere('email', 'like', "%{$search}%")
-            ->orWhereHas('team', function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%");
-            });
+        return $filters->applyTo($query, $data);
+
     }
-
-    public function scopeByState($query, $state)
-    {
-        if ($state == 'active') {
-            return $query->where('active', true);
-        }
-
-        if ($state == 'inactive') {
-            return $query->where('active', false);
-        }
-    }
-
-    public function scopeByRole($query, $role)
-    {
-        if (in_array($role, ['admin','user'])) {
-            return $query->where('role', $role);
-        }
-        
-    }
-
     public function setStateAttribute($value)
     {
         $this->attributes['active'] = $value == 'active';
