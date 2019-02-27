@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Eloquent\Builder;
 use App\Http\ViewComposers\UserFieldsComposer;
 
 class AppServiceProvider extends ServiceProvider
@@ -30,6 +32,13 @@ class AppServiceProvider extends ServiceProvider
 
             return "<?php echo  app('App\Http\ViewComponents\\\\'.{$component}, {$args})->toHtml() ?>";
         });
+
+        Builder::macro('whereQuery', function ($subquery, $value){
+            $this->addBinding($subquery->getBindings());
+            $this->where(DB::raw("({$subquery->toSql()})"), $value);        
+        });
+        
+        
     }
 
     /**

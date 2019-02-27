@@ -56,7 +56,7 @@ class UserSeeder extends Seeder
 
         $admin->skills()->attach($this->skills);
 
-        $admin->profile()->create([
+        $admin->profile->update([
             'bio' => 'Programador, profesor, editor, social media manager',
             'profession_id' => $this->professions->where('title', 'Desarrollador back-end')->first()->id,
         ]);
@@ -71,9 +71,10 @@ class UserSeeder extends Seeder
 
         $user->skills()->attach($this->skills->random(rand(0, 7)));
 
-        factory(UserProfile::class)->create([
-            'user_id' => $user->id,
+        $user->profile->update([
+
             'profession_id' => rand(0, 2) ? $this->professions->random()->id : null,
         ]);
+        
     }
 }
