@@ -20,8 +20,7 @@ body {
   display: none;
   color: #8eb4cb;
   margin: 0 0 0 12px;
-  -webkit-transform: translateY(-2px);
-          transform: translateY(-2px);
+  transform: translateY(-2px);
 }
 
 .table thead th.sort-asc .oi-caret-top {
@@ -131,8 +130,7 @@ body {
 }
 
 .drop-skills:hover .skills-list {
-  -webkit-transform: translateY(0);
-          transform: translateY(0);
+  transform: translateY(0);
   pointer-event: all;
   opacity: 1;
   border-color: rgba(0, 0, 0, 0.125);
@@ -172,5 +170,31 @@ body {
   font-size: 18px;
   top: 6px;
   color: #fff;
+}
+
+.link-sortable {
+  display: block;
+  color: #fff;
+  text-decoration: none;
+  padding-right: 16px;
+  opacity: 0.8;
+  background-image: url(/images/sortable.png?2e4574829d4483987fad5369711ce884);
+  background-repeat: no-repeat;
+  background-position: 100% 50%;
+  background-size: 12px 12px;
+}
+
+.link-sortable:hover {
+  text-decoration: underline;
+  color: #fff;
+  opacity: 1;
+}
+
+.link-sortable.link-sorted-up {
+  background-image: url(/images/sorted-up.png?278f9929cda2fc7341b655971fa5a96c);
+}
+
+.link-sortable.link-sorted-down {
+  background-image: url(/images/sorted-down.png?892a04a6217585a4080bd3228913fdfb);
 }
 
