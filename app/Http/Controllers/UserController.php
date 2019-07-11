@@ -15,10 +15,17 @@ class UserController extends Controller
     public function index(Request $request, UserFilter $filters, Sortable $sortable)
     {
         $users = User::query()
+            ->when($request->routeIs('users.trashed'), function ($q){
+                $q->onlyTrashed();
+            })
             ->with('team', 'skills', 'profile.profession')
             ->filterBy($filters, $request->only(['state','role','search','skills','from','to']))
-            
-            ->orderByDesc('created_at')
+            ->when(request('order'), function ($q){
+                $q->orderBy(request('order'), request('direction','asc'));
+            }, function ($q){
+
+                $q->orderByDesc('created_at');
+            })
             ->paginate();
 
         $users->appends($filters->valid());
@@ -26,7 +33,7 @@ class UserController extends Controller
         $sortable->setCurrentOrder(request('order'),request('direction'));
         return view('users.index', [
             'users' => $users,
-            'view' => 'index',
+            'view' => $request->routeIs('users.trashed') ? 'trash' : 'index',
             'showFilters' => true,
             'skills' => Skill::orderBy('name')->get(),
             'checkedSkills' => collect(request('skills')),
