@@ -72,7 +72,7 @@ class UserFilter extends QueryFilter
 
     public function direction($query, $value)
     {
-
+        
     }
 
    
