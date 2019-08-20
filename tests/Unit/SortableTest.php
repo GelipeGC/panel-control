@@ -22,7 +22,7 @@ class SortableTest extends TestCase
     function builds_a_url_with_sortable_data()
     {
         $this->assertSame(
-            'http://localhost?order=name&direction=asc',
+            'http://localhost?order=name',
             $this->sortable->url('name')
         );
     }
@@ -33,7 +33,7 @@ class SortableTest extends TestCase
         $this->sortable->appends(['a' => 'parameter', 'and' => 'another-parameter']);
 
         $this->assertSame(
-            'http://localhost?a=parameter&and=another-parameter&order=name&direction=asc',
+            'http://localhost?a=parameter&and=another-parameter&order=name',
             $this->sortable->url('name')
         );
         
@@ -42,10 +42,10 @@ class SortableTest extends TestCase
 
     function builds_a_url_with_desc_order_if_the_current_column_matches_the_given_one_and_the_current_direction_is_asc()
     {
-        $this->sortable->appends(['order' => 'name', 'direction' => 'asc']);
+        $this->sortable->appends(['order' => 'name']);
 
         $this->assertSame(
-            'http://localhost?order=name&direction=desc',
+            'http://localhost?order=name-desc',
             $this->sortable->url('name')
         );
     }
@@ -58,7 +58,7 @@ class SortableTest extends TestCase
     /** @test */
     function returns_css_classes_to_indicate_the_column_is_sorted_in_ascendet_order()
     {
-        $this->sortable->appends(['order' => 'name','direction' =>'asc']);
+        $this->sortable->appends(['order' => 'name']);
         
         $this->assertSame('link-sortable link-sorted-up', $this->sortable->classes('name'));
     }
@@ -66,7 +66,7 @@ class SortableTest extends TestCase
     /** @test */
     function returns_css_classes_to_indicate_the_column_is_sorted_in_descendet_order()
     {
-        $this->sortable->appends(['order' => 'name','direction' => 'desc']);
+        $this->sortable->appends(['order' => 'name-desc']);
         
         $this->assertSame('link-sortable link-sorted-down', $this->sortable->classes('name'));
     }
