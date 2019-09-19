@@ -34,11 +34,13 @@ class SearchUsersTest extends TestCase
     function show_results_with_a_partial_search_by_name()
     {
         $joel = factory(User::class)->create([
-            'name' => 'Joel'
+            'name' => 'Joel',
+            'email' => 'joel@example.com'
         ]);
 
         $ellie = factory(User::class)->create([
             'name' => 'Ellie',
+            'email' => 'ellie@example.com'
         ]);
 
         $this->get('/usuarios?search=Jo')
