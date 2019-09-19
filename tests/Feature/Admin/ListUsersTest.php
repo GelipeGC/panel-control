@@ -171,6 +171,22 @@ class ListUsersTest extends TestCase
                 'Jane Doe',
         ]);
 
+        $this->get('/usuarios?order=name-descent')
+            ->assertOk()
+            ->assertSeeInOrder([
+                'John Doe',
+                'Richard Roe',
+                'Jane Doe',
+        ]);
+
+        $this->get('/usuarios?order=asc-name')
+            ->assertOk()
+            ->assertSeeInOrder([
+                'John Doe',
+                'Richard Roe',
+                'Jane Doe',
+        ]);
+
     }
 
     

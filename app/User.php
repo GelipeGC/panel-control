@@ -36,10 +36,10 @@ class User extends Authenticatable
 
     
 
-   public function team()
-   {
-       return $this->belongsTo(Team::class)->withDefault();
-   }
+    public function team()
+    {
+        return $this->belongsTo(Team::class)->withDefault();
+    }
 
     public function skills()
     {
@@ -55,11 +55,7 @@ class User extends Authenticatable
     {
         return $this->is_admin == 'admin';
     }
-    public function scopeFilterBy($query,QueryFilter $filters, array $data)
-    {
-        return $filters->applyTo($query, $data);
 
-    }
     public function setStateAttribute($value)
     {
         $this->attributes['active'] = $value == 'active';
@@ -71,6 +67,6 @@ class User extends Authenticatable
             return $this->active ? 'active' : 'inactive';
         }
     }
-    
+
 }
 

@@ -1,17 +1,19 @@
 <?php
 
-namespace App;
+namespace App\Filters;
 
+use App\Sortable;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
+use App\Rules\SortableColumn;
 use Illuminate\Support\Facades\DB;
 
-class UserFilter extends QueryFilter 
+class UserFilter extends QueryFilter
 {
     protected $aliases = [
         'date' => 'created_at'
     ];
-    
+
     public function rules(): array
     {
         return [
@@ -21,10 +23,10 @@ class UserFilter extends QueryFilter
             'skills' => 'array|exists:skills,id',
             'from' => 'date_format:d/m/Y',
             'to' => 'date_format:d/m/Y',
-            'order' => 'in:name,email,date,name-desc,email-desc,date-desc',
+            'order'    => [new SortableColumn(['name','email','date'])],
         ];
     }
-    
+
     public function search($query, $search)
     {
         return $query->where(function ($query) use($search){
@@ -40,7 +42,7 @@ class UserFilter extends QueryFilter
     public function state($query,$state)
     {
         return $query->where('active', $state == 'active');
-    
+
     }
 
     public function skills($query, $skills)
@@ -49,9 +51,9 @@ class UserFilter extends QueryFilter
                 ->selectRaw('COUNT(`s`.`id`)')
                 ->whereRaw('`s`.`user_id` = `users`.`id`')
                 ->whereIn('skill_id', $skills);
-        
+
         $query->whereQuery($subquery, count($skills));
-        
+
     }
 
     public function from($query, $date)
@@ -70,18 +72,17 @@ class UserFilter extends QueryFilter
 
     public function order($query, $value)
     {
-        if (Str::endsWith($value, '-desc')) {
-            $query->orderByDesc($this->getColumnName(Str::substr($value, 0, -5)));
-        } else {
-            $query->orderBy($this->getColumnName($value));
-        }
+        [$column, $direction] = Sortable::info($value);
+
+        $query->orderBy($this->getColumnName($column), $direction);
         
+
     }
 
     protected function getColumnName($alias)
     {
         return $this->aliases[$alias] ?? $alias;
     }
-   
+
 
 }

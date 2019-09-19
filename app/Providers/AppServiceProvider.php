@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Sortable;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
@@ -23,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Blade::component('shared._card','card');
 
+        $this->app->bind(LengthAwarePaginator::class, \App\LengthAwarePaginator::class);
 
         Blade::directive('render', function($expresion){
             $parts = explode(',', $expresion, 2);
@@ -36,10 +38,10 @@ class AppServiceProvider extends ServiceProvider
 
         Builder::macro('whereQuery', function ($subquery, $value){
             $this->addBinding($subquery->getBindings());
-            $this->where(DB::raw("({$subquery->toSql()})"), $value);        
+            $this->where(DB::raw("({$subquery->toSql()})"), $value);
         });
-        
-        
+
+
     }
 
     /**

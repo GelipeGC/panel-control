@@ -3,14 +3,25 @@
 namespace App;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
-class Sortable 
+class Sortable
 {
     protected $currentUrl;
     protected $query = [];
 
     public function __construct($currentUrl) {
         $this->currentUrl = $currentUrl;
+    }
+
+    public static function info($order)
+    {
+        if (Str::endsWith($order, '-desc')) {
+            return [Str::substr($order, 0, -5), 'desc'];
+        } else {
+            return [$order, 'asc'];
+
+        }
     }
 
     public function appends(array $query)
