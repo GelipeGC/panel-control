@@ -16,6 +16,7 @@ class UserController extends Controller
     {
         $users = User::query()
             ->with('team', 'skills', 'profile.profession')
+            ->withLastLogin()
             ->onlyTrashedIf($request->routeIs('users.trashed'))
             ->applyFilters()
             ->orderByDesc('created_at')

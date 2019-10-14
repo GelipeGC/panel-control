@@ -26,8 +26,17 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'active' => 'bool'
+        'active' => 'bool',
+        'last_login_at' => 'datetime'
     ];
+
+    /**
+     * @return UserQuery
+     */
+    public static function query()
+    {
+        return parent::query();
+    }
 
     public function newEloquentBuilder($query)
     {
@@ -67,6 +76,8 @@ class User extends Authenticatable
             return $this->active ? 'active' : 'inactive';
         }
     }
+
+    
 
 }
 

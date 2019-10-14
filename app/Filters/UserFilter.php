@@ -2,6 +2,7 @@
 
 namespace App\Filters;
 
+use App\Login;
 use App\Sortable;
 use Carbon\Carbon;
 use Illuminate\Support\Str;
@@ -11,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 class UserFilter extends QueryFilter
 {
     protected $aliases = [
-        'date' => 'created_at'
+        'date' => 'created_at',
+        'login' => 'last_login_at'
     ];
 
     public function rules(): array
@@ -23,7 +25,7 @@ class UserFilter extends QueryFilter
             'skills' => 'array|exists:skills,id',
             'from' => 'date_format:d/m/Y',
             'to' => 'date_format:d/m/Y',
-            'order'    => [new SortableColumn(['name','email','date'])],
+            'order'    => [new SortableColumn(['name','email','date','login'])],
         ];
     }
 
@@ -73,7 +75,10 @@ class UserFilter extends QueryFilter
     public function order($query, $value)
     {
         [$column, $direction] = Sortable::info($value);
-
+        
+        if ($column == 'login') {
+            return $query->orderBy('last_login_at', $direction);
+        }
         $query->orderBy($this->getColumnName($column), $direction);
         
 
