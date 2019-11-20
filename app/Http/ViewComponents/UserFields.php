@@ -18,7 +18,7 @@ class UserFields implements Htmlable
 
     /**
      * Get content as a string of HTML.
-     * 
+     *
      * @return string
      */
 
@@ -31,5 +31,4 @@ class UserFields implements Htmlable
             'user' => $this->user
         ]);
     }
-
 }

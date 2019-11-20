@@ -10,7 +10,8 @@ class Sortable
     protected $currentUrl;
     protected $query = [];
 
-    public function __construct($currentUrl) {
+    public function __construct($currentUrl)
+    {
         $this->currentUrl = $currentUrl;
     }
 
@@ -20,14 +21,12 @@ class Sortable
             return [Str::substr($order, 0, -5), 'desc'];
         } else {
             return [$order, 'asc'];
-
         }
     }
 
     public function appends(array $query)
     {
         $this->query = $query;
-
     }
 
     public function url($column, $direction = 'asc')
@@ -40,7 +39,7 @@ class Sortable
 
     public function buildSortableUrl($order)
     {
-        return $this->currentUrl.'?'. Arr::query(array_merge($this->query,['order' => $order]));
+        return $this->currentUrl.'?'. Arr::query(array_merge($this->query, ['order' => $order]));
     }
 
     public function classes($column)

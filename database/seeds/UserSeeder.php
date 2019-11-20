@@ -26,10 +26,8 @@ class UserSeeder extends Seeder
         $this->createAdmin();
 
         foreach (range(1, 99) as $i) {
-            
             $this->createRandomUser();
         }
-        
     }
 
     protected function fetchRelations()
@@ -39,8 +37,6 @@ class UserSeeder extends Seeder
         $this->skills = Skill::all();
 
         $this->teams = Team::all();
-
-
     }
 
     protected function createAdmin()
@@ -76,9 +72,8 @@ class UserSeeder extends Seeder
             'profession_id' => rand(0, 2) ? $this->professions->random()->id : null,
         ]);
         
-        factory(\App\Login::class)->times(rand(1,10))->create([
+        factory(\App\Login::class)->times(rand(1, 10))->create([
             'user_id' => $user->id,
         ]);
-        
     }
 }

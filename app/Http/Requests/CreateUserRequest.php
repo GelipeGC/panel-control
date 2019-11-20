@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\{Role,User};
+use App\Role;
+use App\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Http\FormRequest;
@@ -49,7 +50,7 @@ class CreateUserRequest extends FormRequest
 
     public function messages()
     {
-       return [
+        return [
             'name.required' => 'El campo nombre es obligatorio'
         ];
     }
@@ -57,7 +58,6 @@ class CreateUserRequest extends FormRequest
     public function createUser()
     {
         DB::transaction(function () {
-
             $user = User::create([
                 'name' => $this->name,
                 'email' => $this->email,
@@ -71,7 +71,7 @@ class CreateUserRequest extends FormRequest
                 'twitter' => $this->twitter ?? null,
                 'profession_id' => $this->profession_id,
             ]);
-            if (! empty ($this->skills)) {            
+            if (! empty($this->skills)) {
                 $user->skills()->attach($this->skills ?? []);
             }
         });

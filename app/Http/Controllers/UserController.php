@@ -6,9 +6,12 @@ use App\Sortable;
 use App\UserFilter;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use App\{Profession, Skill, User};
+use App\Profession;
+use App\Skill;
+use App\User;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\{CreateUserRequest, UpdateUserRequest};
+use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -36,7 +39,7 @@ class UserController extends Controller
 
     public function trashed()
     {
-        $users = User::onlyTrashed()->orderBy('created_at','DESC')->paginate(15);
+        $users = User::onlyTrashed()->orderBy('created_at', 'DESC')->paginate(15);
 
 
         return view('users.index', [
@@ -52,7 +55,6 @@ class UserController extends Controller
 
     public function create()
     {
-
         $user = new User();
         return view('users.create', compact('user'));
     }
@@ -69,7 +71,7 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
-    public function update(UpdateUserRequest $request,User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
         $request->updateUser($user);
 

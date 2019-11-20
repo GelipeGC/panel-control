@@ -12,7 +12,7 @@ class ProfessionController extends Controller
         $professions = Profession::query()
                         ->withCount('profiles')
                         ->orderBy('title')->get();
-        return view('professions.index',[
+        return view('professions.index', [
             'professions' => $professions
         ]);
     }

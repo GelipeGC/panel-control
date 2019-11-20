@@ -2,8 +2,9 @@
 
 namespace Tests\Feature\Admin;
 
-
-use App\{User,Skill,Profession};
+use App\User;
+use App\Skill;
+use App\Profession;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,7 +39,6 @@ class CreateUsersTest extends TestCase
     /** @test */
     function it_creates_a_new_user()
     {
-
         $this->profession = factory(Profession::class)->create();
 
         $skillA = factory(Skill::class)->create();
@@ -60,7 +60,7 @@ class CreateUsersTest extends TestCase
 
         $user = User::findByEmail('felipe@developers.net');
 
-        $this->assertDatabaseHas('user_profiles',[
+        $this->assertDatabaseHas('user_profiles', [
             'bio'   => 'Programdor vuejs y laravel',
             'twitter' => 'https://twitte.com/gelipegc',
             'user_id' => $user->id,
@@ -82,15 +82,13 @@ class CreateUsersTest extends TestCase
             'user_id' => $user->id,
             'skill_id' => $skillC->id
         ]);
-
     }
 
     
     /** @test */
     function the_twitter_field_is_optional()
     {
-
-        $this->post('/usuarios/',$this->withData([
+        $this->post('/usuarios/', $this->withData([
             'twitter' => null
         ]))->assertRedirect('usuarios');
 
@@ -100,7 +98,7 @@ class CreateUsersTest extends TestCase
             'password' => '123456',
         ]);
 
-        $this->assertDatabaseHas('user_profiles',[
+        $this->assertDatabaseHas('user_profiles', [
             'bio'   => 'Programdor vuejs y laravel',
             'twitter' => null,
             'user_id' => User::findByEmail('felipe@developers.net')->id
@@ -112,33 +110,30 @@ class CreateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
 
-        $this->post('/usuarios/',$this->withData([
+        $this->post('/usuarios/', $this->withData([
             'role' => null
         ]))->assertRedirect('usuarios');
 
-        $this->assertDatabaseHas('users',[
+        $this->assertDatabaseHas('users', [
             'email' => 'felipe@developers.net',
             'role' => 'user',
         ]);
-
     }
     /** @test */
     function the_role_must_be_valid()
     {
         $this->handleValidationExceptions();
 
-        $this->post('/usuarios/',$this->withData([
+        $this->post('/usuarios/', $this->withData([
             'role' => 'invalid-role',
         ]))->assertSessionHasErrors('role');
 
         $this->assertDatabaseEmpty('users');
-
     }
 
     /** @test */
     function the_profession_id_field_is_optional()
     {
-
         $this->post('/usuarios/', $this->withData([
             'profession_id' => '',
         ]))->assertRedirect('usuarios');
@@ -191,8 +186,8 @@ class CreateUsersTest extends TestCase
             ]))
             ->assertSessionHasErrors(['email']);
 
-            $this->assertDatabaseEmpty('users');
-        }
+        $this->assertDatabaseEmpty('users');
+    }
 
     /** @test */
     function the_email_must_be_valid()
@@ -204,8 +199,8 @@ class CreateUsersTest extends TestCase
             ]))
             ->assertSessionHasErrors(['email']);
 
-            $this->assertDatabaseEmpty('users');
-        }
+        $this->assertDatabaseEmpty('users');
+    }
 
     /** @test */
     function the_email_must_be_unique()
@@ -234,7 +229,7 @@ class CreateUsersTest extends TestCase
             ]))
             ->assertSessionHasErrors(['password']);
 
-            $this->assertDatabaseEmpty('users');
+        $this->assertDatabaseEmpty('users');
     }
 
     /** @test */
@@ -284,26 +279,22 @@ class CreateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
 
-        $this->post('/usuarios/',$this->withData([
+        $this->post('/usuarios/', $this->withData([
             'state' => null
         ]))->assertSessionHasErrors('state');
 
         $this->assertDatabaseEmpty('users');
-
     }
 
     /** @test */
     function the_state_must_be_valid()
     {
-        
         $this->handleValidationExceptions();
 
-        $this->post('/usuarios/',$this->withData([
+        $this->post('/usuarios/', $this->withData([
             'state' => 'invalid-state',
         ]))->assertSessionHasErrors('state');
 
         $this->assertDatabaseEmpty('users');
-
-
     }
 }

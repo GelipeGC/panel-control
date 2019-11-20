@@ -25,7 +25,9 @@ class QueryBuilder extends Builder
             return new $filtersClass;
         }
         throw new \BadMethodCallException(
-            sprintf('no query filter was found  for the model [%s]', get_class($this->model)
+            sprintf(
+                'no query filter was found  for the model [%s]',
+                get_class($this->model)
             )
         );
     }
@@ -34,7 +36,6 @@ class QueryBuilder extends Builder
         $this->filters = $filters;
 
         return $filters->applyTo($this, $data);
-
     }
 
     public function whereQuery($subquery, $operator, $value = null)
@@ -46,23 +47,22 @@ class QueryBuilder extends Builder
     }
 
     public function onlyTrashedIf($value)
-   {
-       if ($value) {
-           $this->onlyTrashed();
-       }
+    {
+        if ($value) {
+            $this->onlyTrashed();
+        }
 
-       return $this;
-   }
+        return $this;
+    }
 
-   public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
-   {
+    public function paginate($perPage = null, $columns = ['*'], $pageName = 'page', $page = null)
+    {
+        $paginator = parent::paginate($perPage, $columns, $pageName, $page);
 
-       $paginator = parent::paginate($perPage, $columns, $pageName, $page);
+        if ($this->filters) {
+            $paginator->appends($this->filters->valid());
+        }
 
-       if ($this->filters) {
-           $paginator->appends($this->filters->valid());
-       }
-
-       return $paginator;
-   }
+        return $paginator;
+    }
 }

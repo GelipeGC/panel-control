@@ -15,7 +15,7 @@ class ProfileController extends Controller
 
         return view('profile.edit', [
             'user' => $user,
-            'professions' => Profession::orderBy('title')->get(), 
+            'professions' => Profession::orderBy('title')->get(),
         ]);
     }
 
@@ -36,6 +36,5 @@ class ProfileController extends Controller
         ]);
 
         return back();
-
     }
 }

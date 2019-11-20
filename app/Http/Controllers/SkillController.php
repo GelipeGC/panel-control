@@ -11,7 +11,7 @@ class SkillController extends Controller
     {
         $skills = Skill::orderBy('name')->get();
 
-        return view('skills.index',[
+        return view('skills.index', [
             'skills' => $skills
         ]);
     }

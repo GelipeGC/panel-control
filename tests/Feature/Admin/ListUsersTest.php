@@ -101,7 +101,6 @@ class ListUsersTest extends TestCase
                 'John Doe',
                 'Jane Doe',
             ]);
-
     }
 
     /** @test */
@@ -124,11 +123,10 @@ class ListUsersTest extends TestCase
                 'john.doe@example.com',
                 'jane.doe@example.com',
             ]);
-
     }
     /** @test */
     function users_are_ordered_by_registration_date()
-    {   
+    {
         factory(User::class)->create(['name' => 'John Doe', 'created_at' => now()->subDays(1)]);
         factory(User::class)->create(['name' => 'Richard Roe', 'created_at' => now()->subDays(2)]);
         factory(User::class)->create(['name' => 'Jane Doe', 'created_at' => now()->subDays(3)]);
@@ -147,12 +145,11 @@ class ListUsersTest extends TestCase
                 'Richard Roe',
                 'Jane Doe',
             ]);
-
     }
 
     /** @test */
     function users_are_ordered_by_login_date()
-    {   
+    {
         factory(Login::class)->create([
             'created_at' => now()->subDays(3),
             'user_id' => factory(User::class)->create(['name' => 'John Doe']),
@@ -180,7 +177,6 @@ class ListUsersTest extends TestCase
                 'Richard Roe',
                 'John Doe',
             ]);
-
     }
 
     /** @test */
@@ -220,7 +216,6 @@ class ListUsersTest extends TestCase
                 'Richard Roe',
                 'Jane Doe',
         ]);
-
     }
 
     

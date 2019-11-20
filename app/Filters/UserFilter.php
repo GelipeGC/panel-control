@@ -31,20 +31,18 @@ class UserFilter extends QueryFilter
 
     public function search($query, $search)
     {
-        return $query->where(function ($query) use($search){
+        return $query->where(function ($query) use ($search) {
             $query->where('name', 'like', "%{$search}%")
             ->orWhere('email', 'like', "%{$search}%")
             ->orWhereHas('team', function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             });
         });
-
     }
 
-    public function state($query,$state)
+    public function state($query, $state)
     {
         return $query->where('active', $state == 'active');
-
     }
 
     public function skills($query, $skills)
@@ -55,7 +53,6 @@ class UserFilter extends QueryFilter
                 ->whereIn('skill_id', $skills);
 
         $query->whereQuery($subquery, count($skills));
-
     }
 
     public function from($query, $date)
@@ -80,14 +77,10 @@ class UserFilter extends QueryFilter
             return $query->orderBy('last_login_at', $direction);
         }
         $query->orderBy($this->getColumnName($column), $direction);
-        
-
     }
 
     protected function getColumnName($alias)
     {
         return $this->aliases[$alias] ?? $alias;
     }
-
-
 }

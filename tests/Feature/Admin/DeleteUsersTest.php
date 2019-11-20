@@ -19,12 +19,12 @@ class DeleteUsersTest extends TestCase
              
         $this->patch("usuarios/{$user->id}/papelera")
             ->assertRedirect('usuarios');
-        // option 1    
-        $this->assertSoftDeleted('users',[
+        // option 1
+        $this->assertSoftDeleted('users', [
             'id' => $user->id
         ]);
         
-        $this->assertSoftDeleted('user_profiles',[
+        $this->assertSoftDeleted('user_profiles', [
             'user_id' => $user->id,
         ]);
 
@@ -32,37 +32,35 @@ class DeleteUsersTest extends TestCase
         $user->refresh();
 
         $this->assertTrue($user->trashed());
-        
     }
-   /** @test */
-   function it_completely_deletes_a_user()
-   {
-    $user = factory(User::class)->create([
+    /** @test */
+    function it_completely_deletes_a_user()
+    {
+        $user = factory(User::class)->create([
         'deleted_at' => now()
     ]);
    
-    $this->delete("usuarios/{$user->id}")
+        $this->delete("usuarios/{$user->id}")
         ->assertRedirect('usuarios/papelera');
 
-    //$this->assertDatabaseEmpty('users');
-    
-   }
+        //$this->assertDatabaseEmpty('users');
+    }
 
-   /** @test */
-   function it_cannot_delete_a_user_that_is_not_in_the_trash()
-   {
+    /** @test */
+    function it_cannot_delete_a_user_that_is_not_in_the_trash()
+    {
         $this->withExceptionHandling();
         
-       $user = factory(User::class)->create([
+        $user = factory(User::class)->create([
            'deleted_at' => null
        ]);
 
-       $this->delete("usuarios/{$user->id}")
+        $this->delete("usuarios/{$user->id}")
            ->assertStatus(404);
 
-       $this->assertDatabaseHas('users',[
+        $this->assertDatabaseHas('users', [
            'id' => $user->id,
            'deleted_at' => null
-       ]);  
-   }
+       ]);
+    }
 }

@@ -67,6 +67,5 @@ class UpdateUserRequest extends FormRequest
         ]);
 
         $user->skills()->sync($this->skills ?: []);
-        
     }
 }

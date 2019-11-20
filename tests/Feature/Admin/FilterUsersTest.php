@@ -2,7 +2,8 @@
 
 namespace Tests\Feature\Admin;
 
-use App\{User, Skill};
+use App\User;
+use App\Skill;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -100,7 +101,6 @@ class FilterUsersTest extends TestCase
                 ->contains($fullStackDev)
                 ->notContains($backendDev)
                 ->notContains($frontendDev);
-
     }
 
     /** @test */

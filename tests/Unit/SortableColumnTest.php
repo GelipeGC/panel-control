@@ -10,7 +10,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 class SortableColumnTest extends TestCase
 {
     /** @test */
-    public function validates_sortable_values ()
+    public function validates_sortable_values()
     {
         $rule = new SortableColumn(['id','name','email','date']);
         
@@ -27,7 +27,5 @@ class SortableColumnTest extends TestCase
         $this->assertFalse($rule->passes('order', 'email-'));
         $this->assertFalse($rule->passes('order', 'name-descx'));
         $this->assertFalse($rule->passes('order', 'desc-name'));
-
-
     }
 }

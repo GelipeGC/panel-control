@@ -16,7 +16,6 @@ class SortableTest extends TestCase
         parent::setUp();
 
         $this->sortable = new Sortable('http://localhost');
-
     }
     /** @test */
     function gets_the_info_about_the_column_name_and_the_order_direction()
@@ -25,8 +24,6 @@ class SortableTest extends TestCase
         $this->assertSame(['name', 'desc'], Sortable::info('name-desc'));
         $this->assertSame(['email', 'asc'], Sortable::info('email'));
         $this->assertSame(['email', 'desc'], Sortable::info('email-desc'));
-
-
     }
     /** @test */
     function builds_a_url_with_sortable_data()
@@ -46,7 +43,6 @@ class SortableTest extends TestCase
             'http://localhost?a=parameter&and=another-parameter&order=name',
             $this->sortable->url('name')
         );
-        
     }
 
 
@@ -61,7 +57,7 @@ class SortableTest extends TestCase
     }
     /** @test */
     function returns_a_css_class_to_indicate_the_column_is_sortable()
-    {        
+    {
         $this->assertSame('link-sortable', $this->sortable->classes('name'));
     }
 

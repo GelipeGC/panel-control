@@ -2,7 +2,9 @@
 
 namespace Tests\Browser\Admin;
 
-use App\{Profession, Skill, User};
+use App\Profession;
+use App\Skill;
+use App\User;
 use Tests\DuskTestCase;
 use Laravel\Dusk\Browser;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -17,11 +19,11 @@ class CreateUserTest extends DuskTestCase
         $skillA = factory(Skill::class)->create();
         $skillB = factory(Skill::class)->create();
 
-        $this->browse(function (Browser $browser) use($profession, $skillA, $skillB) {
+        $this->browse(function (Browser $browser) use ($profession, $skillA, $skillB) {
             $browser->visit('usuarios/nuevo')
                     ->type('name', 'Felipe Guzman')
-                    ->type('email','felipe@developers.net')
-                    ->type('password','secret')
+                    ->type('email', 'felipe@developers.net')
+                    ->type('password', 'secret')
                     ->type('bio', 'Programador')
                     ->select('profession_id', $profession->id)
                     ->type('twitter', 'https://twitter.com/gelipeGC')
@@ -45,7 +47,7 @@ class CreateUserTest extends DuskTestCase
 
         $user = User::findByEmail('felipe@developers.net');
 
-        $this->assertDatabaseHas('user_profiles',[
+        $this->assertDatabaseHas('user_profiles', [
             'bio'   => 'Programador',
             'twitter' => 'https://twitter.com/gelipeGC',
             'user_id' => $user->id,

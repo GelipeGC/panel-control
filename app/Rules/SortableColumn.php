@@ -30,9 +30,9 @@ class SortableColumn implements Rule
         if (! is_string($value)) {
             return false;
         }
-         [$column] =  Sortable::info($value);
+        [$column] =  Sortable::info($value);
 
-         return in_array($column, $this->columns);
+        return in_array($column, $this->columns);
     }
 
     /**

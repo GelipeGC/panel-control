@@ -22,11 +22,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
-        Blade::component('shared._card','card');
+        Blade::component('shared._card', 'card');
 
         $this->app->bind(LengthAwarePaginator::class, \App\LengthAwarePaginator::class);
 
-        Blade::directive('render', function($expresion){
+        Blade::directive('render', function ($expresion) {
             $parts = explode(',', $expresion, 2);
 
             $component = $parts[0];
@@ -36,12 +36,10 @@ class AppServiceProvider extends ServiceProvider
             return "<?php echo  app('App\Http\ViewComponents\\\\'.{$component}, {$args})->toHtml() ?>";
         });
 
-        Builder::macro('whereQuery', function ($subquery, $value){
+        Builder::macro('whereQuery', function ($subquery, $value) {
             $this->addBinding($subquery->getBindings());
             $this->where(DB::raw("({$subquery->toSql()})"), $value);
         });
-
-
     }
 
     /**
@@ -51,7 +49,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind(Sortable::class, function($app){
+        $this->app->bind(Sortable::class, function ($app) {
             return new Sortable(request()->url());
         });
     }

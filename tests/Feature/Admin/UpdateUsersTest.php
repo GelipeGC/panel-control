@@ -81,12 +81,12 @@ class UpdateUsersTest extends TestCase
 
         $this->assertDatabaseCount('user_skill', 2);
 
-        $this->assertDatabaseHas('user_skill',[
+        $this->assertDatabaseHas('user_skill', [
             'user_id' => $user->id,
             'skill_id' => $newSkill1->id
         ]);
 
-        $this->assertDatabaseHas('user_skill',[
+        $this->assertDatabaseHas('user_skill', [
             'user_id' => $user->id,
             'skill_id' => $newSkill2->id
         ]);
@@ -107,8 +107,6 @@ class UpdateUsersTest extends TestCase
         
 
         $this->assertDatabaseEmpty('user_skill');
-
-        
     }
 
     /** @test */
@@ -213,71 +211,70 @@ class UpdateUsersTest extends TestCase
         ]);
     }
 
-     /** @test */
-     function the_role_is_required()
-     {
-         $this->handleValidationExceptions();
+    /** @test */
+    function the_role_is_required()
+    {
+        $this->handleValidationExceptions();
  
-         $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
  
-         $this->from("usuarios/{$user->id}/editar")
+        $this->from("usuarios/{$user->id}/editar")
              ->put("usuarios/{$user->id}", $this->withData([
                  'role' => '',
              ]))
              ->assertRedirect("usuarios/{$user->id}/editar")
              ->assertSessionHasErrors(['role']);
  
-         $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
-     }
+        $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
+    }
 
-     /** @test */
-     function the_bio_is_required()
-     {
-         $this->handleValidationExceptions();
+    /** @test */
+    function the_bio_is_required()
+    {
+        $this->handleValidationExceptions();
  
-         $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
  
-         $this->from("usuarios/{$user->id}/editar")
+        $this->from("usuarios/{$user->id}/editar")
              ->put("usuarios/{$user->id}", $this->withData([
                  'bio' => '',
              ]))
              ->assertRedirect("usuarios/{$user->id}/editar")
              ->assertSessionHasErrors(['bio']);
  
-         $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
-     }
+        $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
+    }
 
-     /** @test */
-     function the_state_is_required()
-     {
-         $this->handleValidationExceptions();
+    /** @test */
+    function the_state_is_required()
+    {
+        $this->handleValidationExceptions();
  
-         $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
  
-         $this->from("usuarios/{$user->id}/editar")
+        $this->from("usuarios/{$user->id}/editar")
              ->put("usuarios/{$user->id}", $this->withData([
                  'state' => '',
              ]))
              ->assertRedirect("usuarios/{$user->id}/editar")
              ->assertSessionHasErrors(['state']);
  
-         $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
-     }
-     /** @test */
-     function the_state_must_be_valid()
-     {
-         $this->handleValidationExceptions();
+        $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
+    }
+    /** @test */
+    function the_state_must_be_valid()
+    {
+        $this->handleValidationExceptions();
  
-         $user = factory(User::class)->create();
+        $user = factory(User::class)->create();
  
-         $this->from("usuarios/{$user->id}/editar")
+        $this->from("usuarios/{$user->id}/editar")
              ->put("usuarios/{$user->id}", $this->withData([
                  'state' => 'invalid',
              ]))
              ->assertRedirect("usuarios/{$user->id}/editar")
              ->assertSessionHasErrors(['state']);
  
-         $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
-     }
-    
+        $this->assertDatabaseMissing('users', ['email' => 'felipe@developers.net']);
+    }
 }

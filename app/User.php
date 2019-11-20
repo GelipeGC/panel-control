@@ -14,7 +14,7 @@ class User extends Authenticatable
     use Notifiable, SoftDeletes;
 
 
-   protected $guarded = [];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -76,8 +76,4 @@ class User extends Authenticatable
             return $this->active ? 'active' : 'inactive';
         }
     }
-
-    
-
 }
-
