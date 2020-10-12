@@ -3,14 +3,15 @@
 namespace App\Providers;
 
 use App\Sortable;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\ViewComposers\UserFieldsComposer;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Blade::component('shared._card', 'card');
+
+        Paginator::useBootstrap();
 
         $this->app->bind(LengthAwarePaginator::class, \App\LengthAwarePaginator::class);
 
