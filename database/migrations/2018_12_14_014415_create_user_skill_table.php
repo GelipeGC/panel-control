@@ -21,6 +21,7 @@ class CreateUserSkillTable extends Migration
             $table->unsignedInteger('skill_id');
             $table->foreign('skill_id')->references('id')->on('skills')->onDelete('cascade');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

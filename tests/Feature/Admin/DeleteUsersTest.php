@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\User;
+use App\Skill;
 use Tests\TestCase;
 use App\UserProfile;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -16,13 +17,16 @@ class DeleteUsersTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-             
+        $user->skills()->attach(factory(Skill::class)->create());
+        
         $this->patch("usuarios/{$user->id}/papelera")
             ->assertRedirect('usuarios');
         // option 1
         $this->assertSoftDeleted('users', [
             'id' => $user->id
         ]);
+
+        
         
         $this->assertSoftDeleted('user_profiles', [
             'user_id' => $user->id,
