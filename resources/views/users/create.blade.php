@@ -3,7 +3,7 @@
 @section('title', "Crear usuario")
 
 @section('content')
-    @card
+    <x-card>
         @slot('header','Crear usuario')
         
         @include('shared._errors')
@@ -16,6 +16,6 @@
                 <a href="{{ route('users.index') }}" class="btn btn-link">Regresar al listado de usuarios</a>
             </div>
         </form>
-    @endcard
+    </x-card>
     
 @endsection
