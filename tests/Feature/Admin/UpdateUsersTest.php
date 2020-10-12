@@ -28,7 +28,7 @@ class UpdateUsersTest extends TestCase
     /** @test */
     function it_loads_the_edit_user_page()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->get("/usuarios/{$user->id}/editar") // usuarios/5/editar
             ->assertStatus(200)
@@ -42,19 +42,19 @@ class UpdateUsersTest extends TestCase
     /** @test */
     function it_updates_a_user()
     {
-        $user = factory(User::class)->create();
-        $oldProfession = factory(Profession::class)->create();
+        $user = User::factory()->create();
+        $oldProfession = Profession::factory()->create();
         $user->profile->update([
             'profession_id' => $oldProfession->id
         ]);
 
-        $oldSkill1 = factory(Skill::class)->create();
-        $oldSkill2 = factory(Skill::class)->create();
+        $oldSkill1 = Skill::factory()->create();
+        $oldSkill2 = Skill::factory()->create();
         $user->skills()->attach([$oldSkill1->id, $oldSkill2->id]);
 
-        $newProfession = factory(Profession::class)->create();
-        $newSkill1 = factory(Skill::class)->create();
-        $newSkill2 = factory(Skill::class)->create();
+        $newProfession = Profession::factory()->create();
+        $newSkill1 = Skill::factory()->create();
+        $newSkill2 = Skill::factory()->create();
         
         $this->put("/usuarios/{$user->id}", $this->withData([
             'role' => 'admin',
@@ -94,10 +94,10 @@ class UpdateUsersTest extends TestCase
     /** @test */
     function it_detaches_all_the_skills_if_none_is_checked()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
        
-        $oldSkill1 = factory(Skill::class)->create();
-        $oldSkill2 = factory(Skill::class)->create();
+        $oldSkill1 = Skill::factory()->create();
+        $oldSkill2 = Skill::factory()->create();
         $user->skills()->attach([$oldSkill1->id, $oldSkill2->id]);
 
     
@@ -114,7 +114,7 @@ class UpdateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->from("usuarios/{$user->id}/editar")
             ->put("usuarios/{$user->id}", $this->withData([
@@ -133,7 +133,7 @@ class UpdateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
 
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
         $this->from("usuarios/{$user->id}/editar")
             ->put("usuarios/{$user->id}", $this->withData([
@@ -151,11 +151,11 @@ class UpdateUsersTest extends TestCase
         $this->handleValidationExceptions();
 
 
-        factory(User::class)->create([
+        User::factory()->create([
             'email' => 'existing-email@example.com',
         ]);
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'felipe@developers.net'
         ]);
 
@@ -172,7 +172,7 @@ class UpdateUsersTest extends TestCase
     /** @test */
     function the_users_email_can_stay_the_same()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'email' => 'felipe@developers.net'
         ]);
 
@@ -194,7 +194,7 @@ class UpdateUsersTest extends TestCase
     {
         $oldPassword = 'CLAVE_ANTERIOR';
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'password' => bcrypt($oldPassword)
         ]);
 
@@ -216,7 +216,7 @@ class UpdateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
  
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
  
         $this->from("usuarios/{$user->id}/editar")
              ->put("usuarios/{$user->id}", $this->withData([
@@ -233,7 +233,7 @@ class UpdateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
  
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
  
         $this->from("usuarios/{$user->id}/editar")
              ->put("usuarios/{$user->id}", $this->withData([
@@ -250,7 +250,7 @@ class UpdateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
  
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
  
         $this->from("usuarios/{$user->id}/editar")
              ->put("usuarios/{$user->id}", $this->withData([
@@ -266,7 +266,7 @@ class UpdateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
  
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
  
         $this->from("usuarios/{$user->id}/editar")
              ->put("usuarios/{$user->id}", $this->withData([

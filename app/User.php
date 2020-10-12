@@ -6,12 +6,12 @@ use App\UserFilter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    //protected $table = 'users';
-    use Notifiable, SoftDeletes;
+    use Notifiable, SoftDeletes, HasFactory;    
 
 
     protected $guarded = [];

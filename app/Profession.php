@@ -3,12 +3,11 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Profession extends Model
 {
-    //protected $table = 'my_professions';
-
-    //public $timestamps = false;
+    use HasFactory;
 
     protected $fillable = ['title'];
 

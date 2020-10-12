@@ -15,9 +15,9 @@ class FilterUsersTest extends TestCase
     /** @test */
     public function filter_users_by_state_active()
     {
-        $activeUser = factory(User::class)->create();
+        $activeUser = User::factory()->create();
 
-        $inactiveUser = factory(User::class)->state('inactive')->create();
+        $inactiveUser = User::factory()->inactive()->create();
 
         $response = $this->get('/usuarios?state=active');
         $response->assertViewCollection('users')
@@ -28,9 +28,9 @@ class FilterUsersTest extends TestCase
     /** @test */
     function filter_users_by_stat_inactive()
     {
-        $activeUser = factory(User::class)->create();
+        $activeUser = User::factory()->create();
 
-        $inactiveUser = factory(User::class)->state('inactive')->create();
+        $inactiveUser = User::factory()->inactive()->create();
 
 
         $response = $this->get('/usuarios?state=inactive');
@@ -45,11 +45,11 @@ class FilterUsersTest extends TestCase
     /** @test */
     function filter_users_by_role_admin()
     {
-        $admin = factory(User::class)->create([
+        $admin = User::factory()->create([
             'role' => 'admin'
         ]);
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'role' => 'user'
         ]);
 
@@ -63,11 +63,11 @@ class FilterUsersTest extends TestCase
     /** @test */
     function filter_users_by_role_user()
     {
-        $admin = factory(User::class)->create([
+        $admin = User::factory()->create([
             'role' => 'admin'
         ]);
 
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'role' => 'user'
         ]);
 
@@ -81,16 +81,16 @@ class FilterUsersTest extends TestCase
     /** @test */
     function filter_users_by_skill()
     {
-        $php = factory(Skill::class)->create(['name' => 'php']);
-        $css = factory(Skill::class)->create(['name' => 'css']);
+        $php = Skill::factory()->create(['name' => 'php']);
+        $css = Skill::factory()->create(['name' => 'css']);
         
-        $backendDev = factory(User::class)->create();
+        $backendDev = User::factory()->create();
         $backendDev->skills()->attach($php);
         
-        $fullStackDev = factory(User::class)->create();
+        $fullStackDev = User::factory()->create();
         $fullStackDev->skills()->attach([$php->id, $css->id]);
 
-        $frontendDev = factory(User::class)->create();
+        $frontendDev = User::factory()->create();
         $frontendDev->skills()->attach($css);
 
         $response = $this->get("usuarios?skills[0]={$php->id}&skills[1]={$css->id}");
@@ -106,16 +106,16 @@ class FilterUsersTest extends TestCase
     /** @test */
     function filter_users_created_from_date()
     {
-        $newestUser = factory(User::class)->create([
+        $newestUser = User::factory()->create([
             'created_at' => '2018-10-02 12:00:00',
         ]);
-        $oldestUser = factory(User::class)->create([
+        $oldestUser = User::factory()->create([
             'created_at' => '2018-09-29 12:00:00',
         ]);
-        $newUser = factory(User::class)->create([
+        $newUser = User::factory()->create([
             'created_at' => '2018-10-01 00:00:00',
         ]);
-        $oldUser = factory(User::class)->create([
+        $oldUser = User::factory()->create([
             'created_at' => '2018-09-30 23:59:59',
         ]);
         $response = $this->get('usuarios?from=01/10/2018');
@@ -129,16 +129,16 @@ class FilterUsersTest extends TestCase
     /** @test */
     function filter_users_created_to_date()
     {
-        $newestUser = factory(User::class)->create([
+        $newestUser = User::factory()->create([
             'created_at' => '2018-10-02 12:00:00',
         ]);
-        $oldestUser = factory(User::class)->create([
+        $oldestUser = User::factory()->create([
             'created_at' => '2018-09-29 12:00:00',
         ]);
-        $newUser = factory(User::class)->create([
+        $newUser = User::factory()->create([
             'created_at' => '2018-10-01 00:00:00',
         ]);
-        $oldUser = factory(User::class)->create([
+        $oldUser = User::factory()->create([
             'created_at' => '2018-09-30 23:59:59',
         ]);
         $response = $this->get('usuarios?to=30/09/2018');

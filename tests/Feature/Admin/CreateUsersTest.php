@@ -26,10 +26,10 @@ class CreateUsersTest extends TestCase
     /** @test */
     function it_loads_the_new_users_page()
     {
-        $profession = factory(Profession::class)->create();
+        $profession = Profession::factory()->create();
 
-        $skillA = factory(Skill::class)->create();
-        $skillB = factory(Skill::class)->create();
+        $skillA = Skill::factory()->create();
+        $skillB = Skill::factory()->create();
 
         $this->get('/usuarios/nuevo')
             ->assertStatus(200)
@@ -39,11 +39,11 @@ class CreateUsersTest extends TestCase
     /** @test */
     function it_creates_a_new_user()
     {
-        $this->profession = factory(Profession::class)->create();
+        $this->profession = Profession::factory()->create();
 
-        $skillA = factory(Skill::class)->create();
-        $skillB = factory(Skill::class)->create();
-        $skillC = factory(Skill::class)->create();
+        $skillA = Skill::factory()->create();
+        $skillB = Skill::factory()->create();
+        $skillC = Skill::factory()->create();
 
         $this->post('/usuarios/', $this->withData([
             'skills' => [$skillA->id,$skillB->id],
@@ -207,7 +207,7 @@ class CreateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
 
-        factory(User::class)->create([
+        User::factory()->create([
             'email' => 'felipe@developers.net'
         ]);
 
@@ -262,8 +262,8 @@ class CreateUsersTest extends TestCase
     {
         $this->handleValidationExceptions();
         
-        $skillA = factory(Skill::class)->create();
-        $skillB = factory(Skill::class)->create();
+        $skillA = Skill::factory()->create();
+        $skillB = Skill::factory()->create();
 
         $this->post('/usuarios/', $this->withData([
                 'skills' => [$skillA->id, $skillB->id + 1]

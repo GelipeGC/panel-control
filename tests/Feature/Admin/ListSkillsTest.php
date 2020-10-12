@@ -14,9 +14,9 @@ class ListSkillsTest extends TestCase
     /** @test */
     function it_shows_the_skills_list()
     {
-        factory(Skill::class)->create(['name' => 'PHP']);
-        factory(Skill::class)->create(['name' => 'TDD']);
-        factory(Skill::class)->create(['name' => 'CSS']);
+        Skill::factory()->create(['name' => 'PHP']);
+        Skill::factory()->create(['name' => 'TDD']);
+        Skill::factory()->create(['name' => 'CSS']);
 
         $this->get('/habilidades/')
                 ->assertStatus(200)

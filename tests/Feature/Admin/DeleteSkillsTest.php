@@ -14,7 +14,7 @@ class DeleteSkillsTest extends TestCase
     /** @test */
     function it_delete_a_skill()
     {
-        $skill = factory(Skill::class)->create();
+        $skill = Skill::factory()->create();
 
         $response = $this->delete("habilidades/{$skill->id}");
 

@@ -24,9 +24,9 @@ class UserProfileTest extends TestCase
     /** @test */
     function a_user_can_edit_its_profile()
     {
-        $user = factory(User::class)->create();
+        $user = User::factory()->create();
 
-        $newProfession = factory(Profession::class)->create();
+        $newProfession = Profession::factory()->create();
 
         $response = $this->get('/editar-perfil/');
 
@@ -57,7 +57,7 @@ class UserProfileTest extends TestCase
     /** @test */
     function the_user_cannot_change_its_role()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'role' => 'user'
         ]);
 
@@ -76,7 +76,7 @@ class UserProfileTest extends TestCase
     /** @test */
     function the_user_cannot_change_its_password()
     {
-        factory(User::class)->create([
+        User::factory()->create([
             'password' => bcrypt('old123'),
         ]);
 

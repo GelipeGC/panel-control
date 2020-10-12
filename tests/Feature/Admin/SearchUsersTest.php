@@ -15,11 +15,11 @@ class SearchUsersTest extends TestCase
     /** @test */
     function search_users_by_name()
     {
-        $joel = factory(User::class)->create([
+        $joel = User::factory()->create([
             'name' => 'Joel'
         ]);
 
-        $ellie = factory(User::class)->create([
+        $ellie = User::factory()->create([
             'name' => 'Ellie',
         ]);
 
@@ -33,12 +33,12 @@ class SearchUsersTest extends TestCase
     /** @test */
     function show_results_with_a_partial_search_by_name()
     {
-        $joel = factory(User::class)->create([
+        $joel = User::factory()->create([
             'name' => 'Joel',
             'email' => 'joel@example.com'
         ]);
 
-        $ellie = factory(User::class)->create([
+        $ellie = User::factory()->create([
             'name' => 'Ellie',
             'email' => 'ellie@example.com'
         ]);
@@ -53,11 +53,11 @@ class SearchUsersTest extends TestCase
     /** @test */
     function search_users_by_email()
     {
-        $joel = factory(User::class)->create([
+        $joel = User::factory()->create([
             'email' => 'joel@example.com',
         ]);
 
-        $ellie = factory(User::class)->create([
+        $ellie = User::factory()->create([
             'email' => 'ellie@example.net',
         ]);
 
@@ -71,11 +71,11 @@ class SearchUsersTest extends TestCase
     /** @test */
     function show_results_with_a_partial_search_by_email()
     {
-        $joel = factory(User::class)->create([
+        $joel = User::factory()->create([
             'email' => 'joel@example.com',
         ]);
 
-        $ellie = factory(User::class)->create([
+        $ellie = User::factory()->create([
             'email' => 'ellie@example.net',
         ]);
 
@@ -89,19 +89,19 @@ class SearchUsersTest extends TestCase
     /** @test */
     function search_users_by_team_name()
     {
-        $joel = factory(User::class)->create([
+        $joel = User::factory()->create([
             'name' => 'Joel',
-            'team_id' => factory(Team::class)->create(['name' => 'Smuggler'])->id,
+            'team_id' => Team::factory()->create(['name' => 'Smuggler'])->id,
         ]);
 
-        $ellie = factory(User::class)->create([
+        $ellie = User::factory()->create([
             'name' => 'Ellie',
             'team_id' => null,
         ]);
 
-        $marlene = factory(User::class)->create([
+        $marlene = User::factory()->create([
             'name' => 'Marlene',
-            'team_id' => factory(Team::class)->create(['name' => 'Firefly'])->id,
+            'team_id' => Team::factory()->create(['name' => 'Firefly'])->id,
         ]);
 
         $response = $this->get('/usuarios?search=Firefly')
@@ -116,19 +116,19 @@ class SearchUsersTest extends TestCase
     /** @test */
     function partial_search_by_team_name()
     {
-        $joel = factory(User::class)->create([
+        $joel = User::factory()->create([
             'name' => 'Joel',
-            'team_id' => factory(Team::class)->create(['name' => 'Smuggler'])->id,
+            'team_id' => Team::factory()->create(['name' => 'Smuggler'])->id,
         ]);
 
-        $ellie = factory(User::class)->create([
+        $ellie = User::factory()->create([
             'name' => 'Ellie',
             'team_id' => null,
         ]);
 
-        $marlene = factory(User::class)->create([
+        $marlene = User::factory()->create([
             'name' => 'Marlene',
-            'team_id' => factory(Team::class)->create(['name' => 'Firefly'])->id,
+            'team_id' => Team::factory()->create(['name' => 'Firefly'])->id,
         ]);
 
         $response = $this->get('/usuarios?search=Fire')

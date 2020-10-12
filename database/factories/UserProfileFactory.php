@@ -1,9 +1,28 @@
 <?php
 
-use Faker\Generator as Faker;
+namespace Database\Factories;
 
-$factory->define(App\UserProfile::class, function (Faker $faker) {
-    return [
-        'bio' => $faker->paragraph,
-    ];
-});
+use App\UserProfile;
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+class UserProfileFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = UserProfile::class;
+
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'bio' => $this->faker->paragraph,
+        ];
+    }
+}

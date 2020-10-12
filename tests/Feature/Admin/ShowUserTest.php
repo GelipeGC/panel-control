@@ -14,7 +14,7 @@ class ShowUserTest extends TestCase
     /** @test */
     function it_displays_the_users_details()
     {
-        $user = factory(User::class)->create([
+        $user = User::factory()->create([
             'name' => 'Felipe Guzman',
         ]);
 
